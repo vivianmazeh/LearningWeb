@@ -2,20 +2,16 @@ package com.learningWeb.spring;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
-import jakarta.ws.rs.HttpMethod;
-import jakarta.ws.rs.core.HttpHeaders;
 
 @SpringBootApplication
-public class LearningWebApplication {
-
+public class LearningWebApplication  {
+		
 	public static void main(String[] args) {
 		SpringApplication.run(LearningWebApplication.class, args);
 	}
 
+
+	// @Bean:applied on a method to specify that it returns a bean to be managed by Spring context
 //	@Bean
 //	 WebMvcConfigurer corsConfig(){
 //		
