@@ -18,7 +18,7 @@ public class CorsConfig implements WebMvcConfigurer {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.addAllowedOrigin("http://localhost:4200"); // Replace with your Angular app's origin
+        config.addAllowedOrigin("http://angular-easy-to-learn-web.s3-website.us-east-2.amazonaws.com"); // Replace with your Angular app's origin
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
 
