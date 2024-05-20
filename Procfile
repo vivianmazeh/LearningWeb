@@ -1,1 +1,2 @@
-web: java -jar LearningWeb-0.0.1-SNAPSHOT.jar
+web: java -jar target/LearningWeb-0.0.1-SNAPSHOT.jar
+

@@ -1,0 +1,6 @@
+com\learningWeb\spring\LearningWebApplication.class
+com\learningWeb\spring\resource\SqlQuerySource.class
+com\learningWeb\spring\resource\Controller.class
+com\learningWeb\spring\model\Book.class
+com\learningWeb\spring\config\CorsConfig.class
+com\learningWeb\spring\resource\XmlSqlQuerySource.class
