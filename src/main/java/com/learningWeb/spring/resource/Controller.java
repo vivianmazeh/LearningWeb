@@ -1,6 +1,7 @@
 package com.learningWeb.spring.resource;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -9,15 +10,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-// export PATH=/usr/local/Cellar/maven/3.9.5/bin:$PATH
 import org.xml.sax.SAXException;
-
-import com.learningWeb.spring.model.Book;
+import com.learningWeb.spring.model.CityProfile;
+import com.learningWeb.spring.polulationData.GetCityProfiles;
 
 @RestController
-@RequestMapping("/education")
+@RequestMapping("/weplay")
 
 public class Controller {
 
@@ -37,18 +39,11 @@ public class Controller {
 			e.printStackTrace();
 		}
 	}
-	@GetMapping("/allbooks")
-	public ResponseEntity < List<Book>> findAllBook(){
-		
-		List<Book> books = null;
-		
-		String sql = queries.getSqlQuery("selectAllBooks");		
-		
-		 books = jdbctemplate.query(sql, (re, rowNum)-> new Book(re.getString("name"),
-		  re.getInt("id"), re.getFloat("price")));;
-				
-		return ResponseEntity.ok(books);
-		
-	}
 
+	@GetMapping("/cityprofiles/{state_name}")
+	public ArrayList<CityProfile> getCityProfile(@PathVariable String state_name){
+		state_name = state_name.substring(0, 1).toUpperCase() + state_name.substring(1).toLowerCase(); // make sure the first char is away capitalized 
+		GetCityProfiles data = new GetCityProfiles(state_name);
+		return data.getCityProfile();	
+	}
 }

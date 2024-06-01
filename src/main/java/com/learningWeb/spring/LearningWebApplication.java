@@ -3,6 +3,8 @@ package com.learningWeb.spring;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import com.learningWeb.spring.polulationData.GetCityProfiles;
+
 @SpringBootApplication
 public class LearningWebApplication  {
 		
