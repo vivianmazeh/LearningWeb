@@ -18,7 +18,7 @@ public class GetCityProfiles {
 	private static final String API_KEY = "941ef484004daa4c7a8738126f025504afcdb990";
     public static final String year = "2022";
 	private static final String BASE_URL = "https://api.census.gov/data/2022/acs/acs5";
-	public static final int MIN_POPULATION = 3500; // ONLY SHOW THE CITIES THAT HAVE MORE THAN 3500 POPULATION
+	public static final int MIN_POPULATION = 2500; // ONLY SHOW THE CITIES THAT HAVE MORE THAN 3500 POPULATION
     public String state_code;
 
    
