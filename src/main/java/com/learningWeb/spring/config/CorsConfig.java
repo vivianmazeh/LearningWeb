@@ -1,5 +1,6 @@
 package com.learningWeb.spring.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
@@ -14,11 +15,14 @@ import org.springframework.web.filter.CorsFilter;
 @EnableWebMvc
 public class CorsConfig implements WebMvcConfigurer {
 
+    @Value("${cors.allowed.origin}")
+    private String corsAllowedOrigin;
+    
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.addAllowedOrigin("http://localhost:4200"); // Replace with your Angular app's origin
+        config.addAllowedOrigin(corsAllowedOrigin); 
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
 
