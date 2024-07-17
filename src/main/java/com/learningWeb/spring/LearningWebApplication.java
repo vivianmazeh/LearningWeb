@@ -2,10 +2,12 @@ package com.learningWeb.spring;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 
 import com.learningWeb.spring.polulationData.GetCityProfiles;
 
-@SpringBootApplication
+
+@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
 public class LearningWebApplication  {
 		
 	public static void main(String[] args) {
