@@ -53,6 +53,7 @@ public class Controller {
 	
 	 @GetMapping("/cors-debug")
 	    public String corsDebug() {
+		    System.out.print("CORS Allowed Origin: " + corsAllowedOrigin);
 	        return "CORS Allowed Origin: " + corsAllowedOrigin;
 	    }
 }
