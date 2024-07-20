@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,6 +29,9 @@ public class Controller {
 	private JdbcTemplate jdbctemplate;
 	private XmlSqlQuerySource queries = new XmlSqlQuerySource() ;
 	
+	@Value("${cors.allowed.origin}")
+	private String corsAllowedOrigin;
+	
 	public Controller() {
 		try {
 			queries.loadQueries();
@@ -46,4 +50,9 @@ public class Controller {
 		GetCityProfiles data = new GetCityProfiles(state_name);
 		return data.getCityProfile();	
 	}
+	
+	 @GetMapping("/cors-debug")
+	    public String corsDebug() {
+	        return "CORS Allowed Origin: " + corsAllowedOrigin;
+	    }
 }
