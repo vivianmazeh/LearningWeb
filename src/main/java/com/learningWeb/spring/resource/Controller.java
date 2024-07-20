@@ -51,7 +51,7 @@ public class Controller {
 		return data.getCityProfile();	
 	}
 	
-	 @GetMapping("/cors-debug")
+	 @GetMapping("/test")
 	    public String corsDebug() {
 		    System.out.print("CORS Allowed Origin: " + corsAllowedOrigin);
 	        return "CORS Allowed Origin: " + corsAllowedOrigin;
