@@ -1,1 +1,1 @@
-# LearningWeb
+PS C:\Users\vivian\Documents\Git Repositories\WePlayCafe> mvn spring-boot:run -D"spring-boot.run.profiles=local"# LearningWeb
