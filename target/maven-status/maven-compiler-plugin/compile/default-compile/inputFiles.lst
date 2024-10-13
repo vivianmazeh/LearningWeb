@@ -2,7 +2,6 @@ C:\Users\vivian\Documents\Git Repositories\WePlayCafe\src\main\java\com\learning
 C:\Users\vivian\Documents\Git Repositories\WePlayCafe\src\main\java\com\learningWeb\spring\config\CorsConfig.java
 C:\Users\vivian\Documents\Git Repositories\WePlayCafe\src\main\java\com\learningWeb\spring\config\HttpsEnforcementConfig.java
 C:\Users\vivian\Documents\Git Repositories\WePlayCafe\src\main\java\com\learningWeb\spring\config\RedirectToHttpsConfig.java
-C:\Users\vivian\Documents\Git Repositories\WePlayCafe\src\main\java\com\learningWeb\spring\LearningWebApplication.java
 C:\Users\vivian\Documents\Git Repositories\WePlayCafe\src\main\java\com\learningWeb\spring\model\CityProfile.java
 C:\Users\vivian\Documents\Git Repositories\WePlayCafe\src\main\java\com\learningWeb\spring\polulationData\GetCityProfiles.java
 C:\Users\vivian\Documents\Git Repositories\WePlayCafe\src\main\java\com\learningWeb\spring\polulationData\package-info.java
@@ -12,3 +11,8 @@ C:\Users\vivian\Documents\Git Repositories\WePlayCafe\src\main\java\com\learning
 C:\Users\vivian\Documents\Git Repositories\WePlayCafe\src\main\java\com\learningWeb\spring\resource\XmlSqlQuerySource.java
 C:\Users\vivian\Documents\Git Repositories\WePlayCafe\src\main\java\com\learningWeb\spring\security\package-info.java
 C:\Users\vivian\Documents\Git Repositories\WePlayCafe\src\main\java\com\learningWeb\spring\security\SecurityConfig.java
+C:\Users\vivian\Documents\Git Repositories\WePlayCafe\src\main\java\com\learningWeb\spring\Square\CreatePayment.java
+C:\Users\vivian\Documents\Git Repositories\WePlayCafe\src\main\java\com\learningWeb\spring\Square\CreateSubscription.java
+C:\Users\vivian\Documents\Git Repositories\WePlayCafe\src\main\java\com\learningWeb\spring\Square\PaymentResult.java
+C:\Users\vivian\Documents\Git Repositories\WePlayCafe\src\main\java\com\learningWeb\spring\Square\TokenWrapper.java
+C:\Users\vivian\Documents\Git Repositories\WePlayCafe\src\main\java\com\learningWeb\spring\WePlayWebApplication.java

@@ -1,1 +1,31 @@
 PS C:\Users\vivian\Documents\Git Repositories\WePlayCafe> mvn spring-boot:run -D"spring-boot.run.profiles=local"
+
+ netstat -ano | findstr :8080
+ taskkill /PID 22904 /F
+ 
+ 
+ PS C:\Users\vivian\Documents\Git Repositories\WePlayCafe> keytool -genkeypair -alias tomcat -keyalg RSA -keysize 2048 -storetype PKCS12 -keystore keystore.p12 -validity 3650
+Enter keystore password: 883751
+
+Re-enter new password: 883751
+
+What is your first and last name?
+  [Unknown]:  vivian mazeh
+What is the name of your organizational unit?
+  [Unknown]:  WePlay
+What is the name of your organization?
+  [Unknown]:  WePlay
+What is the name of your City or Locality?
+  [Unknown]:  Taylor
+What is the name of your State or Province?
+  [Unknown]:  Michigan
+What is the two-letter country code for this unit?
+  [Unknown]:  01
+Is CN=vivian mazeh, OU=WePlay, O=WePlay, L=Taylor, ST=Michigan, C=01 correct?
+  [no]:  y
+
+Generating 2,048 bit RSA key pair and self-signed certificate (SHA256withRSA) with a validity of 3,650 days
+        for: CN=vivian mazeh, OU=WePlay, O=WePlay, L=Taylor, ST=Michigan, C=01
+ 
+ 
+ 
