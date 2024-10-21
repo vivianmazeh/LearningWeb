@@ -5,15 +5,17 @@ package com.weplayWeb.spring.Square;
  */
 public class TokenWrapper {
 
-    private String token;
+    private String sourceId;
     private String idempotencyKey;
+    private AmountMoney amountMoney;
+  
 
-    public String getToken() {
-        return token;
+    public String getSourceId() {
+        return sourceId;
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public void setSourceId(String sourceId) {
+        this.sourceId = sourceId;
     }
 
     public String getIdempotencyKey() {
@@ -23,4 +25,12 @@ public class TokenWrapper {
     public void setIdempotencyKey(String idempotencyKey) {
       this.idempotencyKey = idempotencyKey;
     }
+
+	public AmountMoney getAmountMoney() {
+		return amountMoney;
+	}
+
+	public void setAmountMoney(AmountMoney amountMoney) {
+		this.amountMoney =amountMoney;
+	}
 }
