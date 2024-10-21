@@ -109,8 +109,7 @@ public class Controller {
      * @param tokenObject the token object containing the token, idempotency key, and other necessary info
      * @return PaymentResult indicating whether the payment was successful or not
      */
-    @PostMapping("/payment")
-    @CrossOrigin(origins = "http://localhost:4200") // Allow requests from Angular app
+    @PostMapping("/payment") 
     public ResponseEntity<PaymentResult> processPayment(@RequestBody TokenWrapper tokenObject)
             throws InterruptedException, ExecutionException {
 
