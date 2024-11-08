@@ -1,5 +1,7 @@
 package com.weplayWeb.spring.Square;
 
+
+
 /**
  * TokenWrapper is a model object representing the token received from the front end.
  */
@@ -8,6 +10,8 @@ public class TokenWrapper {
     private String sourceId;
     private String idempotencyKey;
     private AmountMoney amountMoney;
+    private String customerId;
+    private Customer customer;
   
 
     public String getSourceId() {
@@ -33,4 +37,23 @@ public class TokenWrapper {
 	public void setAmountMoney(AmountMoney amountMoney) {
 		this.amountMoney =amountMoney;
 	}
+
+
+	public Customer getCustomer() {
+		return customer;
+	}
+
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
+	}
+
+	public String getCustomerId() {
+		return customerId;
+	}
+
+	public void setCustomerId(String customerId) {
+		this.customerId = customerId;
+	}
+
+
 }

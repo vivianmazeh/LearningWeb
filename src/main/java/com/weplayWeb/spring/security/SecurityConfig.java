@@ -16,11 +16,15 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, CorsConfig corsConfig, HandlerMappingIntrospector introspector) throws Exception {
+    	
+    	MvcRequestMatcher.Builder mvcMatcherBuilder = new MvcRequestMatcher.Builder(introspector);
+    	
         http
             .csrf(csrf -> csrf.disable()) // Disable CSRF
             .cors(cors -> cors.configurationSource(corsConfig.corsConfigurationSource())) // Apply global CORS configuration
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers(new MvcRequestMatcher(introspector, "/payment")).permitAll() // Specify MvcRequestMatcher for Spring MVC endpoint
+                .requestMatchers(mvcMatcherBuilder.pattern("/payment")).permitAll() // Specify MvcRequestMatcher for Spring MVC endpoint
+                .requestMatchers(mvcMatcherBuilder.pattern("/customer")).permitAll()
                 .anyRequest().authenticated()); // Secure other endpoints
 
         return http.build();

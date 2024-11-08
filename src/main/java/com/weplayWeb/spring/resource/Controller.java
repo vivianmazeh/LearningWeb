@@ -2,34 +2,28 @@ package com.weplayWeb.spring.resource;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.CompletableFuture;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.xml.sax.SAXException;
-
-import com.squareup.square.Environment;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import com.squareup.square.SquareClient;
-import com.squareup.square.api.PaymentsApi;
-
-import com.squareup.square.exceptions.ApiException;
-import com.squareup.square.models.CreatePaymentRequest;
-import com.squareup.square.models.Money;
 import com.squareup.square.models.RetrieveLocationResponse;
-
-import com.weplayWeb.spring.Square.PaymentResult;
+import com.weplayWeb.spring.Square.CreateCustomer;
+import com.weplayWeb.spring.Square.CreatePayment;
+import com.weplayWeb.spring.Square.ErrorResponse;
 import com.weplayWeb.spring.Square.TokenWrapper;
 import com.weplayWeb.spring.model.CityProfile;
 import com.weplayWeb.spring.polulationData.GetCityProfiles;
@@ -38,12 +32,18 @@ import com.weplayWeb.spring.polulationData.GetCityProfiles;
 public class Controller {
 
 	// @Autowired: used for automatic dependency injection
-	@Autowired 
-	private JdbcTemplate jdbctemplate;
-	private XmlSqlQuerySource queries = new XmlSqlQuerySource() ;
+//	@Autowired 
+//	private JdbcTemplate jdbctemplate;
+//	private XmlSqlQuerySource queries = new XmlSqlQuerySource() ;
 	
-	@Autowired 
-	private SquareClient squareClient;
+	
+	@Autowired
+	private CreateCustomer createCustomer;
+	
+	@Autowired
+	private CreatePayment createPayment;
+	
+	private final Logger logger = LoggerFactory.getLogger(Controller.class);
 	
 	 @Value("${square.environment}")
 	    private String environment;
@@ -51,49 +51,18 @@ public class Controller {
 	 @Value("${square.accessToken}")
 	    private String accessToken;
 
-	@Value("${square.locationId}")
+	 @Value("${square.locationId}")
 	    private String locationId;
 	
-	@Value("${square.applicationId}")
-    private String applicationId;
-
+	 @Value("${square.applicationId}")
+       private String applicationId;
 
 	
 	@Value("${cors.allowed.origin}")
 	private String corsAllowedOrigin;
 	
-	   public Controller() {
-		   
-	
-		try {
-			queries.loadQueries();
-		} catch (SAXException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-  
-	
-	  @GetMapping("/")
-	  String index(Map<String, Object> model) throws InterruptedException, ExecutionException {
-
-	    // Get currency and country for location
-	    RetrieveLocationResponse locationResponse = getLocationInformation(squareClient).get();
-	    model.put("paymentFormUrl",
-	    		environment.equals("sandbox") ? "https://sandbox.web.squarecdn.com/v1/square.js"
-	            : "https://web.squarecdn.com/v1/square.js");
-	    model.put("locationId", locationId);
-	    model.put("appId", applicationId);
-	    model.put("currency", locationResponse.getLocation().getCurrency());
-	    model.put("country", locationResponse.getLocation().getCountry());
-	    model.put("idempotencyKey", UUID.randomUUID().toString());
-
-	    return "index";
-	  }
+	  public Controller() {}
+	  
 
 	@GetMapping("/cityprofiles/{state_name}")
 	public ArrayList<CityProfile> getCityProfile(@PathVariable String state_name){
@@ -101,74 +70,77 @@ public class Controller {
 		GetCityProfiles data = new GetCityProfiles(state_name);
 		return data.getCityProfile();	
 	}
-	
-	  /**
-     * API endpoint for processing a payment.
-     * Accepts a payment token from the frontend and processes the payment using Square API.
-     *
-     * @param tokenObject the token object containing the token, idempotency key, and other necessary info
-     * @return PaymentResult indicating whether the payment was successful or not
-     */
-    @PostMapping("/payment") 
-    public ResponseEntity<PaymentResult> processPayment(@RequestBody TokenWrapper tokenObject)
-            throws InterruptedException, ExecutionException {
-
-    	 PaymentsApi paymentsApi = squareClient.getPaymentsApi();
-    	 // Create Money object for the payment
-         Money money = new Money.Builder()
-                 .amount(tokenObject.getAmountMoney().getAmount()) // Amount in cents
-                 .currency("USD") // Ensure it's the correct currency
-                 .build();
-         
-         // Build the CreatePaymentRequest
-         CreatePaymentRequest paymentRequest = new CreatePaymentRequest.Builder(
-                 tokenObject.getSourceId(),  // Token from frontend
-                 UUID.randomUUID().toString()) // Idempotency Key
-                 .amountMoney(money)
-                 .locationId(locationId)
-                 .autocomplete(true) // Automatically complete payment
-                 .build();
-         
-         try {
-             // Call the Square Payments API
-             paymentsApi.createPayment(paymentRequest);
-             return ResponseEntity.ok(new PaymentResult("SUCCESS", null));
-         } catch (ApiException e) {
-             return ResponseEntity.status(403).body(new PaymentResult("FAILURE", e.getErrors()));
-         } catch (IOException e) {
-        	 e.printStackTrace();
-        	 return ResponseEntity.status(500).body(new PaymentResult("Unknown error occurred", null));
 			
-		}
-        
-         }
 	
-	 @GetMapping("/test")
-	    public String corsDebug() {
-		    System.out.print("CORS Allowed Origin: " + corsAllowedOrigin);
-	        return "CORS Allowed Origin: " + corsAllowedOrigin;
-	    }
-
-
-	  /**
-	   * Helper method that makes a retrieveLocation API call using the configured
-	   * locationId and returns the future containing the response
-	   *
-	   * @param squareClient the API client
-	   * @return a future that holds the retrieveLocation response
-	   */
-	  private CompletableFuture<RetrieveLocationResponse> getLocationInformation(
-	      SquareClient squareClient) {
-	    return squareClient.getLocationsApi().retrieveLocationAsync(locationId)
-	        .thenApply(result -> {
-	          return result;
-	        })
-	        .exceptionally(exception -> {
-	          System.out.println("Failed to make the request");
-	          System.out.printf("Exception: %s%n", exception.getMessage());
-	          return null;
-	        });
-	  }
+	  @PostMapping("/customer") 
+	  public ResponseEntity<?> createCustomer(@RequestBody TokenWrapper tokenObject)
+	          throws InterruptedException, ExecutionException, IOException {
+		  
+		  try {
+			  		  
+			  return createCustomer.createCustomerResponse(tokenObject);
+			  
+		  } catch (IOException e) {
+	            logger.error("IO error during customer creation", e);
+	            return ResponseEntity
+	                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                .body(new ErrorResponse("IO error occurred during customer creation"));
+	        } catch (Exception e) {
+	            logger.error("Unexpected error during customer creation", e);
+	            return ResponseEntity
+	                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                .body(new ErrorResponse("An unexpected error occurred during customer creatoin"));
+	        }
+	    } 
+	      
+   
+	    @PostMapping("/payment") 
+	    public ResponseEntity<?> processPayment(@RequestBody TokenWrapper tokenObject)
+	            throws InterruptedException, ExecutionException {
+	    	
+	    	try { 		   	
+	    	
+	    		 return createPayment.createPaymentRequest(tokenObject);		  
+		    	
+	    	}catch (IOException e) {
+	            logger.error("IO error during payment creation", e);
+	            return ResponseEntity
+	                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                .body(new ErrorResponse("IO error occurred during payment creation"));
+	        } catch (Exception e) {
+	            logger.error("Unexpected error during payment creation", e);
+	            return ResponseEntity
+	                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                .body(new ErrorResponse("An unexpected error occurred during payment processing"));
+	        }
+	     }
+	
+//	  private CompletableFuture<RetrieveLocationResponse> getLocationInformation(
+//	      SquareClient squareClient) {
+//	    return squareClient.getLocationsApi().retrieveLocationAsync(locationId)
+//	        .thenApply(result -> {
+//	          return result;
+//	        })
+//	        .exceptionally(exception -> {
+//	          System.out.println("Failed to make the request");
+//	          System.out.printf("Exception: %s%n", exception.getMessage());
+//	          return null;
+//	        });
+//	  }
 
 }
+
+@RestControllerAdvice
+class GlobalExceptionHandler {
+    private final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleException(Exception e) {
+        logger.error("Unhandled exception occurred", e);
+        return ResponseEntity
+            .status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .body(new ErrorResponse("An unexpected error occurred"));
+    }
+}
+
 
