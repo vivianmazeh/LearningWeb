@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.squareup.square.SquareClient;
 import com.squareup.square.api.CustomersApi;
+import com.squareup.square.exceptions.ApiException;
 import com.squareup.square.models.CreateCustomerRequest;
 import com.squareup.square.models.CreateCustomerResponse;
 
@@ -72,8 +73,8 @@ public class CreateCustomer {
 	            
 	            CreateCustomerResponse result;
 				try {
-					result = customerApi.createCustomerAsync(customerRequest).get();
 					
+					result =customerApi.createCustomer(customerRequest);
 					if (result.getCustomer() != null) {
                         String customerId = result.getCustomer().getId();
                         logger.info("Customer created successfully with ID: {}", customerId);
@@ -83,16 +84,11 @@ public class CreateCustomer {
                         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                             .body(new CustomerResponse(null, "Failed to create customer"));
                     }
-				} catch (InterruptedException e) {
-					 logger.error("Operation interrupted: ", e);
-			            Thread.currentThread().interrupt(); // Restore the interrupted status
-			            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-			                .body(new CustomerResponse(null, "Operation interrupted during customer creatation"));
-				} catch (ExecutionException e) {
-		            logger.error("Execution error: ", e);
+				} catch (ApiException e) {
+					  logger.error("ApiException: ", e);
 		            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-		                .body(new CustomerResponse(null, "Execution error: " + e.getMessage()));
-		        }
+			                .body(new CustomerResponse(null, "ApiException during customer creation: " + e.getMessage()));
+				}
 	 }
 
 }
