@@ -24,23 +24,20 @@ import org.springframework.web.filter.CorsFilter;
 public class CorsConfig implements WebMvcConfigurer {
 
     @Value("${cors.allowed.origin}")
-    private String corsAllowedOrigin;
+    private String[] corsAllowedOrigins;
     
     private static final Logger logger = LoggerFactory.getLogger(CreateCustomer.class);
     
-    @PostConstruct
-    public void init() {
-        System.out.println("CORS Allowed Origin: " + corsAllowedOrigin);
-    }
     
     @Bean
 	public CorsConfigurationSource corsConfigurationSource() {
     	
         CorsConfiguration config = new CorsConfiguration();
-        logger.info("corsAllowedOrigin in Cors Class :" + corsAllowedOrigin);
+        for(String origin: corsAllowedOrigins)
+    		logger.info("CORS Allowed Origin: " + origin);
         
         config.setAllowCredentials(true);
-        config.setAllowedOrigins(Arrays.asList(corsAllowedOrigin));  // Allow specific origin
+        config.setAllowedOrigins(Arrays.asList(corsAllowedOrigins));  // Allow specific origin
         config.setAllowedHeaders(Arrays.asList(
                 "Origin", 
                 "Content-Type", 
