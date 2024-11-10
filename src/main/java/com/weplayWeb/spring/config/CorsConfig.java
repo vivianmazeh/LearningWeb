@@ -43,13 +43,17 @@ public class CorsConfig implements WebMvcConfigurer {
         
         config.setAllowCredentials(true);
         config.setAllowedHeaders(Arrays.asList(
-                "Origin", 
-                "Content-Type", 
-                "Accept", 
-                "Authorization",
-                "X-Requested-With",
-                "Access-Control-Request-Method",
-                "Access-Control-Request-Headers"
+        		   "Origin",
+                   "Content-Type",
+                   "Accept",
+                   "Authorization",
+                   "X-Requested-With",
+                   "Access-Control-Request-Method",
+                   "Access-Control-Request-Headers",
+                   "X-Forwarded-Proto",
+                   "X-Forwarded-For",
+                   "X-Real-IP"
+                
             ));
         config.setExposedHeaders(Arrays.asList(
                 "Access-Control-Allow-Origin",
@@ -65,18 +69,12 @@ public class CorsConfig implements WebMvcConfigurer {
         return source;
     }
 
-    @Bean
-    CorsFilter corsFilter() {
-        return new CorsFilter(corsConfigurationSource());
-    }
-    
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
             .allowedOrigins(corsAllowedOrigins)
             .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
             .allowedHeaders("*")
-            .exposedHeaders("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials", "Location")
             .allowCredentials(true)
             .maxAge(3600);
     }
