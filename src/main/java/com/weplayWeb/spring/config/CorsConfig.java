@@ -7,6 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -15,12 +17,13 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.weplayWeb.spring.Square.CreateCustomer;
 
-import jakarta.annotation.PostConstruct;
+
 
 import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 @EnableWebMvc
+@Order(Ordered.HIGHEST_PRECEDENCE)
 public class CorsConfig implements WebMvcConfigurer {
 
     @Value("${cors.allowed.origin}")
