@@ -27,7 +27,7 @@ public class CorsConfig implements WebMvcConfigurer {
     @Value("${cors.allowed.origin}")
     private String[] corsAllowedOrigins;
     
-    private static final Logger logger = LoggerFactory.getLogger(CreateCustomer.class);
+    private static final Logger logger = LoggerFactory.getLogger(CorsConfig.class);
     
     
     @Bean
@@ -35,9 +35,14 @@ public class CorsConfig implements WebMvcConfigurer {
     	
         CorsConfiguration config = new CorsConfiguration();
         
-        for(String origin: corsAllowedOrigins) {
-        	logger.info("CORS Allowed Origin: " + origin.trim());
-        	 config.addAllowedOrigin(origin.trim()); 
+        for (String origin : corsAllowedOrigins) {
+            String trimmedOrigin = origin.trim();
+            // ADDED: Empty check
+            if (!trimmedOrigin.isEmpty()) {
+                // CHANGED: Improved logging format
+                logger.info("Adding CORS Allowed Origin: {}", trimmedOrigin);
+                config.addAllowedOrigin(trimmedOrigin);
+            }
         }
     		
         
@@ -52,15 +57,22 @@ public class CorsConfig implements WebMvcConfigurer {
                    "Access-Control-Request-Headers",
                    "X-Forwarded-Proto",
                    "X-Forwarded-For",
-                   "X-Real-IP"
+                   "X-Real-IP", 
+                   "Cache-Control",
+                   "Pragma"
                 
             ));
         config.setExposedHeaders(Arrays.asList(
                 "Access-Control-Allow-Origin",
                 "Access-Control-Allow-Credentials",
-                "Location"
+                "Access-Control-Allow-Headers",
+                "Access-Control-Allow-Methods",
+                "Access-Control-Max-Age",
+                "Location",
+                "Content-Disposition",
+                "X-Total-Count"
             ));
-        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Allow all methods
+        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")); // Allow all methods
         config.setMaxAge(3600L); // 1 hour
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -73,8 +85,12 @@ public class CorsConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
             .allowedOrigins(corsAllowedOrigins)
-            .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+            .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
             .allowedHeaders("*")
+            .exposedHeaders("Access-Control-Allow-Origin", 
+                    "Access-Control-Allow-Credentials",
+                    "Location",
+                    "Content-Disposition")
             .allowCredentials(true)
             .maxAge(3600);
     }

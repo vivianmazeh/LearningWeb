@@ -17,7 +17,7 @@ import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 @Configuration
 public class SecurityConfig {
 	
-	private static final Logger logger = LoggerFactory.getLogger(CreateCustomer.class);
+	private static final Logger logger = LoggerFactory.getLogger(SecurityConfig .class);
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, CorsConfig corsConfig, HandlerMappingIntrospector introspector) throws Exception {
