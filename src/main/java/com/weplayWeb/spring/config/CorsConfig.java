@@ -12,13 +12,11 @@ import org.springframework.core.annotation.Order;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.weplayWeb.spring.Square.CreateCustomer;
-
-
-
 import org.springframework.web.filter.CorsFilter;
 
 @Configuration
@@ -36,11 +34,14 @@ public class CorsConfig implements WebMvcConfigurer {
 	public CorsConfigurationSource corsConfigurationSource() {
     	
         CorsConfiguration config = new CorsConfiguration();
-        for(String origin: corsAllowedOrigins)
-    		logger.info("CORS Allowed Origin: " + origin);
+        
+        for(String origin: corsAllowedOrigins) {
+        	logger.info("CORS Allowed Origin: " + origin.trim());
+        	 config.addAllowedOrigin(origin.trim()); 
+        }
+    		
         
         config.setAllowCredentials(true);
-        config.setAllowedOrigins(Arrays.asList(corsAllowedOrigins));  // Allow specific origin
         config.setAllowedHeaders(Arrays.asList(
                 "Origin", 
                 "Content-Type", 
@@ -52,7 +53,8 @@ public class CorsConfig implements WebMvcConfigurer {
             ));
         config.setExposedHeaders(Arrays.asList(
                 "Access-Control-Allow-Origin",
-                "Access-Control-Allow-Credentials"
+                "Access-Control-Allow-Credentials",
+                "Location"
             ));
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Allow all methods
         config.setMaxAge(3600L); // 1 hour
@@ -66,5 +68,16 @@ public class CorsConfig implements WebMvcConfigurer {
     @Bean
     CorsFilter corsFilter() {
         return new CorsFilter(corsConfigurationSource());
+    }
+    
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+            .allowedOrigins(corsAllowedOrigins)
+            .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+            .allowedHeaders("*")
+            .exposedHeaders("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials", "Location")
+            .allowCredentials(true)
+            .maxAge(3600);
     }
 }

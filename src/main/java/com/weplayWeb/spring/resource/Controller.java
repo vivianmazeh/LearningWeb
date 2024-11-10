@@ -3,7 +3,6 @@ package com.weplayWeb.spring.resource;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.CompletableFuture;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.JdbcTemplate;
+
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,8 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import com.squareup.square.SquareClient;
-import com.squareup.square.models.RetrieveLocationResponse;
+
 import com.weplayWeb.spring.Square.CreateCustomer;
 import com.weplayWeb.spring.Square.CreatePayment;
 import com.weplayWeb.spring.Square.ErrorResponse;
@@ -32,10 +30,7 @@ import com.weplayWeb.spring.polulationData.GetCityProfiles;
 public class Controller {
 
 	// @Autowired: used for automatic dependency injection
-//	@Autowired 
-//	private JdbcTemplate jdbctemplate;
-//	private XmlSqlQuerySource queries = new XmlSqlQuerySource() ;
-	
+
 	
 	@Autowired
 	private CreateCustomer createCustomer;
