@@ -45,12 +45,12 @@ public class SecurityConfig {
             )
             .requiresChannel(channel -> {
                 if (env.acceptsProfiles(profiles -> profiles.test("prod"))) {
-                    channel.anyRequest().requiresSecure();
+                    channel.anyRequest().requiresSecure()
+                    					.requestMatchers(r -> r.getHeader("X-Forwarded-Proto") != null);
                 }
             })
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers(mvcMatcherBuilder.pattern("api/payment/**")).permitAll()
-                .requestMatchers(mvcMatcherBuilder.pattern("api/customer/**")).permitAll()
+                .requestMatchers(mvcMatcherBuilder.pattern("api/**")).permitAll()
                 .requestMatchers(mvcMatcherBuilder.pattern("/")).permitAll()      
                 .requestMatchers(mvcMatcherBuilder.pattern("/favicon.ico")).permitAll()
                 .anyRequest().authenticated()
