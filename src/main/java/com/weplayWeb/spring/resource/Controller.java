@@ -74,9 +74,10 @@ public class Controller {
 	          throws InterruptedException, ExecutionException, IOException {
 		  
 		  try {
-			  		  
-			  return createCustomer.createCustomerResponse(tokenObject);
-			  
+			  logger.info("Received customer creation request");	  
+			  ResponseEntity<?> response = createCustomer.createCustomerResponse(tokenObject);
+			  logger.info("Customer creation completed with status: {}", response.getStatusCode());
+	          return response;
 		  } catch (IOException e) {
 	            logger.error("IO error during customer creation", e);
 	            return ResponseEntity
@@ -112,18 +113,6 @@ public class Controller {
 	        }
 	     }
 	
-//	  private CompletableFuture<RetrieveLocationResponse> getLocationInformation(
-//	      SquareClient squareClient) {
-//	    return squareClient.getLocationsApi().retrieveLocationAsync(locationId)
-//	        .thenApply(result -> {
-//	          return result;
-//	        })
-//	        .exceptionally(exception -> {
-//	          System.out.println("Failed to make the request");
-//	          System.out.printf("Exception: %s%n", exception.getMessage());
-//	          return null;
-//	        });
-//	  }
 
 }
 

@@ -117,9 +117,6 @@ public class CorsConfig implements WebMvcConfigurer {
         // Create and configure the source
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
-        source.registerCorsConfiguration("/api/**", config);
-        
- 
         
         return source;
     }
@@ -140,6 +137,7 @@ public class CorsConfig implements WebMvcConfigurer {
             .allowedOriginPatterns(corsAllowedOrigins)
             .allowedMethods("*")
             .allowedHeaders("*")
+            .exposedHeaders("Location")
             .allowCredentials(true)
             .maxAge(3600);
     }

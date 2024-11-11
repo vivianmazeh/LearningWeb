@@ -49,11 +49,9 @@ public class SecurityConfig {
                 }
             })
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers(mvcMatcherBuilder.pattern("api/payment")).permitAll()
-                .requestMatchers(mvcMatcherBuilder.pattern("api/customer")).permitAll()
-                .requestMatchers(mvcMatcherBuilder.pattern("/")).permitAll()
-                .requestMatchers(mvcMatcherBuilder.pattern("/card-payment")).permitAll()
-                .requestMatchers(mvcMatcherBuilder.pattern("/error")).permitAll()
+                .requestMatchers(mvcMatcherBuilder.pattern("api/payment/**")).permitAll()
+                .requestMatchers(mvcMatcherBuilder.pattern("api/customer/**")).permitAll()
+                .requestMatchers(mvcMatcherBuilder.pattern("/")).permitAll()      
                 .requestMatchers(mvcMatcherBuilder.pattern("/favicon.ico")).permitAll()
                 .anyRequest().authenticated()
             );
