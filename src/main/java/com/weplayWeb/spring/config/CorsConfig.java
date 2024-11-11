@@ -5,6 +5,7 @@ import java.util.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
@@ -34,6 +35,7 @@ public class CorsConfig implements WebMvcConfigurer {
 	public CorsConfigurationSource corsConfigurationSource() {
     	
         CorsConfiguration config = new CorsConfiguration();
+        logger.info("Configuring CORS with origins: {}", Arrays.toString(corsAllowedOrigins));
         
         for (String origin : corsAllowedOrigins) {
             String trimmedOrigin = origin.trim();
@@ -81,17 +83,11 @@ public class CorsConfig implements WebMvcConfigurer {
         return source;
     }
 
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-            .allowedOrigins(corsAllowedOrigins)
-            .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
-            .allowedHeaders("*")
-            .exposedHeaders("Access-Control-Allow-Origin", 
-                    "Access-Control-Allow-Credentials",
-                    "Location",
-                    "Content-Disposition")
-            .allowCredentials(true)
-            .maxAge(3600);
+    @Bean
+    public FilterRegistrationBean<CorsFilter> corsFilter() {
+        FilterRegistrationBean<CorsFilter> bean = new FilterRegistrationBean<>(
+            new CorsFilter(corsConfigurationSource()));
+        bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
+        return bean;
     }
 }
