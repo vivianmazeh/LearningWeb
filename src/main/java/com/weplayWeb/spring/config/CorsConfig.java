@@ -59,16 +59,9 @@ public class CorsConfig implements WebMvcConfigurer {
     private static final List<String> ALLOWED_METHODS = Arrays.asList(
         "GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"
     );
-
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration config = new CorsConfiguration();
-        
-        // Log initial configuration
-        logger.info("Initializing CORS configuration with provided origins: {}", 
-            Arrays.toString(corsAllowedOrigins));
-
-        // Process and validate origins
+    
+    public List<String> addValidOrigins(){
+    	 // Process and validate origins
         List<String> validOrigins = new ArrayList<>();
         for (String origin : corsAllowedOrigins) {
             String trimmedOrigin = origin.trim();
@@ -94,8 +87,24 @@ public class CorsConfig implements WebMvcConfigurer {
             }
         }
 
+        
+        return validOrigins;
+        
+       
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        
+        // Log initial configuration
+        logger.info("Initializing CORS configuration with provided origins: {}", 
+            Arrays.toString(corsAllowedOrigins));
+
+       
+
         // Add all valid origins to configuration
-        validOrigins.forEach(config::addAllowedOrigin);
+        addValidOrigins().forEach(config::addAllowedOrigin);
         
         // Configure essential CORS settings
         config.setAllowCredentials(true);
@@ -104,16 +113,13 @@ public class CorsConfig implements WebMvcConfigurer {
         config.setAllowedMethods(ALLOWED_METHODS);
         config.setMaxAge(3600L); // 1 hour
 
-        // Add specific pattern matching for preflight requests
-        config.addAllowedOriginPattern("https://*.weplayofficial.com");
-        
+ 
         // Create and configure the source
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
+        source.registerCorsConfiguration("/api/**", config);
         
-        // Log final configuration
-        logger.info("CORS configuration completed. Allowed origins: {}", 
-            String.join(", ", validOrigins));
+ 
         
         return source;
     }
@@ -128,8 +134,10 @@ public class CorsConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
+    	
+    
         registry.addMapping("/**")
-            .allowedOriginPatterns("https://*.weplayofficial.com")
+            .allowedOriginPatterns(corsAllowedOrigins)
             .allowedMethods("*")
             .allowedHeaders("*")
             .allowCredentials(true)
