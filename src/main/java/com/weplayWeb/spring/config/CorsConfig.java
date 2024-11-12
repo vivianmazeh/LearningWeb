@@ -30,36 +30,7 @@ public class CorsConfig implements WebMvcConfigurer {
     
     private static final Logger logger = LoggerFactory.getLogger(CorsConfig.class);
     
-    private static final List<String> ALLOWED_HEADERS = Arrays.asList(
-        "Origin",
-        "Content-Type",
-        "Accept",
-        "Authorization",
-        "X-Requested-With",
-        "Access-Control-Request-Method",
-        "Access-Control-Request-Headers",
-        "X-Forwarded-Proto",
-        "X-Forwarded-For",
-        "X-Real-IP",
-        "Cache-Control",
-        "Pragma"
-    );
 
-    private static final List<String> EXPOSED_HEADERS = Arrays.asList(
-        "Access-Control-Allow-Origin",
-        "Access-Control-Allow-Credentials",
-        "Access-Control-Allow-Headers",
-        "Access-Control-Allow-Methods",
-        "Access-Control-Max-Age",
-        "Location",
-        "Content-Disposition",
-        "X-Total-Count"
-    );
-
-    private static final List<String> ALLOWED_METHODS = Arrays.asList(
-        "GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"
-    );
-    
     public List<String> addValidOrigins(){
     	 // Process and validate origins
         List<String> validOrigins = new ArrayList<>();
@@ -86,10 +57,8 @@ public class CorsConfig implements WebMvcConfigurer {
                 }
             }
         }
-
         
-        return validOrigins;
-        
+        return validOrigins;    
        
     }
 
@@ -106,17 +75,41 @@ public class CorsConfig implements WebMvcConfigurer {
         // Add all valid origins to configuration
         addValidOrigins().forEach(config::addAllowedOrigin);
         
+        // Configure headers
+        config.setAllowedHeaders(Arrays.asList(
+            "Origin", "Content-Type", "Accept", "Authorization",
+            "X-Requested-With", "Access-Control-Request-Method",
+            "Access-Control-Request-Headers", "X-Forwarded-Proto",
+            "X-Forwarded-For", "CF-Connecting-IP", "X-Real-IP",
+            "Cache-Control", "Pragma"
+        ));
+        
+        // Configure exposed headers
+        config.setExposedHeaders(Arrays.asList(
+            "Access-Control-Allow-Origin",
+            "Access-Control-Allow-Credentials",
+            "Access-Control-Allow-Headers",
+            "Access-Control-Allow-Methods",
+            "Access-Control-Max-Age",
+            "Location",
+            "Content-Disposition",
+            "X-Total-Count"
+        ));
         // Configure essential CORS settings
         config.setAllowCredentials(true);
-        config.setAllowedHeaders(ALLOWED_HEADERS);
-        config.setExposedHeaders(EXPOSED_HEADERS);
-        config.setAllowedMethods(ALLOWED_METHODS);
+       
+        config.setAllowedMethods(Arrays.asList(
+                "GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"
+            ));
+        
+    
         config.setMaxAge(3600L); // 1 hour
 
  
         // Create and configure the source
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
+        source.registerCorsConfiguration("/api/**", config);
         
         return source;
     }
@@ -126,19 +119,8 @@ public class CorsConfig implements WebMvcConfigurer {
         FilterRegistrationBean<CorsFilter> bean = 
             new FilterRegistrationBean<>(new CorsFilter(corsConfigurationSource()));
         bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
+        bean.addUrlPatterns("/*");
         return bean;
     }
 
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-    	
-    
-        registry.addMapping("/**")
-            .allowedOriginPatterns(corsAllowedOrigins)
-            .allowedMethods("*")
-            .allowedHeaders("*")
-            .exposedHeaders("Location")
-            .allowCredentials(true)
-            .maxAge(3600);
-    }
 }
