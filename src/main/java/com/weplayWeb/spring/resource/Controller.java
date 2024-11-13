@@ -2,6 +2,8 @@ package com.weplayWeb.spring.resource;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import org.slf4j.Logger;
@@ -22,10 +24,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.weplayWeb.spring.Square.CreateCustomer;
 import com.weplayWeb.spring.Square.CreatePayment;
+import com.weplayWeb.spring.Square.CustomerResponse;
 import com.weplayWeb.spring.Square.ErrorResponse;
+import com.weplayWeb.spring.Square.PaymentResult;
 import com.weplayWeb.spring.Square.TokenWrapper;
 import com.weplayWeb.spring.model.CityProfile;
 import com.weplayWeb.spring.polulationData.GetCityProfiles;
+import com.weplayWeb.spring.services.CSPService;
 
 @RestController
 @RequestMapping("/api")
@@ -33,6 +38,8 @@ public class Controller {
 
 	// @Autowired: used for automatic dependency injection
 
+	@Autowired
+    private CSPService cspService;
 	
 	@Autowired
 	private CreateCustomer createCustomer;
@@ -67,53 +74,33 @@ public class Controller {
 		GetCityProfiles data = new GetCityProfiles(state_name);
 		return data.getCityProfile();	
 	}
-			
+		
+	 @GetMapping("/nonce")
+	    public ResponseEntity<Map<String, String>> getNonce() {
+	        String nonce = cspService.generateNonce();
+	            
+	        return ResponseEntity.ok(Collections.singletonMap("nonce", nonce));
+	    }
+	 
 	
 	  @PostMapping("/customer") 
-	  public ResponseEntity<?> createCustomer(@RequestBody TokenWrapper tokenObject)
+	  public ResponseEntity<CustomerResponse> createCustomer(@RequestBody TokenWrapper tokenObject)
 	          throws InterruptedException, ExecutionException, IOException {
-		  
-		  try {
+		  	 
 			  logger.info("Received customer creation request");	  
-			  ResponseEntity<?> response = createCustomer.createCustomerResponse(tokenObject);
+			  ResponseEntity<CustomerResponse> response = createCustomer.createCustomerResponse(tokenObject);
 			  logger.info("Customer creation completed with status: {}", response.getStatusCode());
-	          return response;
-		  } catch (IOException e) {
-	            logger.error("IO error during customer creation", e);
-	            return ResponseEntity
-	                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-	                .body(new ErrorResponse("IO error occurred during customer creation"));
-	        } catch (Exception e) {
-	            logger.error("Unexpected error during customer creation", e);
-	            return ResponseEntity
-	                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-	                .body(new ErrorResponse("An unexpected error occurred during customer creatoin"));
-	        }
+	          return response;		  
 	    } 
 	      
    
 	    @PostMapping("/payment") 
-	    public ResponseEntity<?> processPayment(@RequestBody TokenWrapper tokenObject)
-	            throws InterruptedException, ExecutionException {
+	    public ResponseEntity<PaymentResult> processPayment(@RequestBody TokenWrapper tokenObject)
+	            throws InterruptedException, ExecutionException, IOException {   
 	    	
-	    	try { 		   	
-	    	
-	    		 return createPayment.createPaymentRequest(tokenObject);		  
-		    	
-	    	}catch (IOException e) {
-	            logger.error("IO error during payment creation", e);
-	            return ResponseEntity
-	                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-	                .body(new ErrorResponse("IO error occurred during payment creation"));
-	        } catch (Exception e) {
-	            logger.error("Unexpected error during payment creation", e);
-	            return ResponseEntity
-	                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-	                .body(new ErrorResponse("An unexpected error occurred during payment processing"));
-	        }
+	    	     logger.info("Received Payment creation request");	
+	    		 return createPayment.createPaymentRequest(tokenObject);		      		
 	     }
-	
-
 }
 
 @RestControllerAdvice

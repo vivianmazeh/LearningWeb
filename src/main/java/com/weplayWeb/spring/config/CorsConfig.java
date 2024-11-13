@@ -81,7 +81,7 @@ public class CorsConfig implements WebMvcConfigurer {
             "X-Requested-With", "Access-Control-Request-Method",
             "Access-Control-Request-Headers", "X-Forwarded-Proto",
             "X-Forwarded-For", "CF-Connecting-IP", "X-Real-IP",
-            "Cache-Control", "Pragma"
+            "Cache-Control", "Pragma", "X-CSP-Nonce"
         ));
         
         // Configure exposed headers
@@ -93,7 +93,8 @@ public class CorsConfig implements WebMvcConfigurer {
             "Access-Control-Max-Age",
             "Location",
             "Content-Disposition",
-            "X-Total-Count"
+            "X-Total-Count",
+            "X-CSP-Nonce"
         ));
         // Configure essential CORS settings
         config.setAllowCredentials(true);

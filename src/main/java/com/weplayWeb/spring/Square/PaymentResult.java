@@ -7,28 +7,28 @@ import java.util.List;
  */
 public class PaymentResult {
 
-  private String title;
+	  private final String status;
+	   private final Object errors;
+	   private String nonce;
 
-  private List<com.squareup.square.models.Error> errors;
+	   public PaymentResult(String status, Object errors) {
+	        this.status = status;
+	        this.errors = errors;
+	    }
 
-  public PaymentResult(String t, List<com.squareup.square.models.Error> errorMessages) {
-    this.title = t;
-    this.errors = errorMessages;
-  }
+	    public String getStatus() {
+	        return status;
+	    }
 
-  public void setTitle(String title) {
-    this.title = title;
-  }
+	    public Object getErrors() {
+	        return errors;
+	    }
 
-  public String getTitle() {
-    return this.title;
-  }
+	    public String getNonce() {
+	        return nonce;
+	    }
 
-  public void setErrors(List<com.squareup.square.models.Error> errors) {
-    this.errors = errors;
-  }
-
-  public List<com.squareup.square.models.Error> getErrors() {
-    return this.errors;
-  }
+	    public void setNonce(String nonce) {
+	        this.nonce = nonce;
+	    }
 }
