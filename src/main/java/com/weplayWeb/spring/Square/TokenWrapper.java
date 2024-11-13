@@ -12,6 +12,7 @@ public class TokenWrapper {
     private AmountMoney amountMoney;
     private String customerId;
     private Customer customer;
+    private String buyerEmailAddress;
   
 
     public String getSourceId() {
@@ -53,6 +54,14 @@ public class TokenWrapper {
 
 	public void setCustomerId(String customerId) {
 		this.customerId = customerId;
+	}
+
+	public String getBuyerEmailAddress() {
+		return buyerEmailAddress;
+	}
+
+	public void setBuyerEmailAddress(String buyerEmailAddress) {
+		this.buyerEmailAddress = buyerEmailAddress;
 	}
 
 
