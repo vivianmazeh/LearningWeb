@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.weplayWeb.spring.WePlayWebApplicationTests
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.937 s - in com.weplayWeb.spring.WePlayWebApplicationTests
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6.341 s - in com.weplayWeb.spring.WePlayWebApplicationTests

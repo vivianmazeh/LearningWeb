@@ -22,15 +22,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.squareup.square.exceptions.ApiException;
 import com.weplayWeb.spring.Square.CreateCustomer;
 import com.weplayWeb.spring.Square.CreatePayment;
 import com.weplayWeb.spring.Square.CustomerResponse;
+import com.weplayWeb.spring.Square.EmailResult;
 import com.weplayWeb.spring.Square.ErrorResponse;
 import com.weplayWeb.spring.Square.PaymentResult;
 import com.weplayWeb.spring.Square.TokenWrapper;
 import com.weplayWeb.spring.model.CityProfile;
 import com.weplayWeb.spring.polulationData.GetCityProfiles;
 import com.weplayWeb.spring.services.CSPService;
+import com.weplayWeb.spring.services.EmailService;
 
 @RestController
 @RequestMapping("/api")
@@ -46,6 +49,9 @@ public class Controller {
 	
 	@Autowired
 	private CreatePayment createPayment;
+	
+	@Autowired
+	private EmailService emailService;
 	
 	private final Logger logger = LoggerFactory.getLogger(Controller.class);
 	
@@ -96,11 +102,36 @@ public class Controller {
    
 	    @PostMapping("/payment") 
 	    public ResponseEntity<PaymentResult> processPayment(@RequestBody TokenWrapper tokenObject)
-	            throws InterruptedException, ExecutionException, IOException {   
+	            throws InterruptedException, ExecutionException, IOException, ApiException {   
 	    	
 	    	     logger.info("Received Payment creation request");	
-	    		 return createPayment.createPaymentRequest(tokenObject);		      		
+	    	     ResponseEntity<PaymentResult> paymentResult = createPayment.createPaymentRequest(tokenObject);	
+	    	     
+	    	     if(paymentResult.getStatusCode().is2xxSuccessful()) {
+	    	    	
+	    	    	 EmailResult emailResult;
+	    	    	 
+	    	    	 try {
+	    	                emailResult = createPayment.sendEmail();
+	    	            } catch (Exception e) {
+	    	                logger.error("Failed to send email", e);
+	    	                emailResult = new EmailResult("FAILURE", "Email sending failed: " + e.getMessage());
+	    	            }
+	    	    	 
+	    	    	 PaymentResult updatedResult = new PaymentResult(
+	    	    	            "SUCCESS",
+	    	    	            null,
+	    	    	            emailResult
+	    	    	        );
+	    	    	 updatedResult.setNonce(paymentResult.getBody().getNonce());
+	    	    	  return ResponseEntity.ok()
+	    	    	            .headers(paymentResult.getHeaders())
+	    	    	            .body(updatedResult);
+	    	     }
+	    	     
+	    		 return paymentResult;	      		
 	     }
+	      	    
 }
 
 @RestControllerAdvice

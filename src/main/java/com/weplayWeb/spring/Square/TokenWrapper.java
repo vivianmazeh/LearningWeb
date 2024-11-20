@@ -1,6 +1,7 @@
 package com.weplayWeb.spring.Square;
 
-
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * TokenWrapper is a model object representing the token received from the front end.
@@ -13,9 +14,20 @@ public class TokenWrapper {
     private String customerId;
     private Customer customer;
     private String buyerEmailAddress;
-  
+    
+    public record Order(double price, int quantity, String sectionName) {}
+    
+    List<Order >orderInfo = new ArrayList<Order>();
 
-    public String getSourceId() {
+    public List<Order> getOrderInfo() {
+		return orderInfo;
+	}
+
+	public void setOrderInfo(List<Order> orderInfo) {
+		this.orderInfo = orderInfo;
+	}
+
+	public String getSourceId() {
         return sourceId;
     }
 
