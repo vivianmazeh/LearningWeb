@@ -1,4 +1,5 @@
 C:\Users\vivian\Documents\Git Repositories\WePlayCafe\src\main\java\com\weplayWeb\spring\config\AppConfig.java
+C:\Users\vivian\Documents\Git Repositories\WePlayCafe\src\main\java\com\weplayWeb\spring\config\CloudinaryConfig.java
 C:\Users\vivian\Documents\Git Repositories\WePlayCafe\src\main\java\com\weplayWeb\spring\config\CorsConfig.java
 C:\Users\vivian\Documents\Git Repositories\WePlayCafe\src\main\java\com\weplayWeb\spring\config\CSPFilter.java
 C:\Users\vivian\Documents\Git Repositories\WePlayCafe\src\main\java\com\weplayWeb\spring\config\EmailConfig.java
@@ -13,6 +14,7 @@ C:\Users\vivian\Documents\Git Repositories\WePlayCafe\src\main\java\com\weplayWe
 C:\Users\vivian\Documents\Git Repositories\WePlayCafe\src\main\java\com\weplayWeb\spring\security\SecurityConfig.java
 C:\Users\vivian\Documents\Git Repositories\WePlayCafe\src\main\java\com\weplayWeb\spring\services\CSPService.java
 C:\Users\vivian\Documents\Git Repositories\WePlayCafe\src\main\java\com\weplayWeb\spring\services\EmailService.java
+C:\Users\vivian\Documents\Git Repositories\WePlayCafe\src\main\java\com\weplayWeb\spring\services\ImageService.java
 C:\Users\vivian\Documents\Git Repositories\WePlayCafe\src\main\java\com\weplayWeb\spring\Square\AmountMoney.java
 C:\Users\vivian\Documents\Git Repositories\WePlayCafe\src\main\java\com\weplayWeb\spring\Square\CreateCustomer.java
 C:\Users\vivian\Documents\Git Repositories\WePlayCafe\src\main\java\com\weplayWeb\spring\Square\CreatePayment.java
@@ -24,5 +26,7 @@ C:\Users\vivian\Documents\Git Repositories\WePlayCafe\src\main\java\com\weplayWe
 C:\Users\vivian\Documents\Git Repositories\WePlayCafe\src\main\java\com\weplayWeb\spring\Square\ErrorResponse.java
 C:\Users\vivian\Documents\Git Repositories\WePlayCafe\src\main\java\com\weplayWeb\spring\Square\PaymentResult.java
 C:\Users\vivian\Documents\Git Repositories\WePlayCafe\src\main\java\com\weplayWeb\spring\Square\SquareConfig.java
+C:\Users\vivian\Documents\Git Repositories\WePlayCafe\src\main\java\com\weplayWeb\spring\Square\SubscriptionRequest.java
+C:\Users\vivian\Documents\Git Repositories\WePlayCafe\src\main\java\com\weplayWeb\spring\Square\SubscriptionResponse.java
 C:\Users\vivian\Documents\Git Repositories\WePlayCafe\src\main\java\com\weplayWeb\spring\Square\TokenWrapper.java
 C:\Users\vivian\Documents\Git Repositories\WePlayCafe\src\main\java\com\weplayWeb\spring\WePlayWebApplication.java

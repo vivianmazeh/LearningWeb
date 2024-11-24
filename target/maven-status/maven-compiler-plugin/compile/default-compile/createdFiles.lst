@@ -6,6 +6,7 @@ com\weplayWeb\spring\Square\CustomerResponse.class
 com\weplayWeb\spring\polulationData\GetCityProfiles.class
 com\weplayWeb\spring\config\CorsConfig.class
 com\weplayWeb\spring\services\EmailService.class
+com\weplayWeb\spring\Square\SubscriptionRequest.class
 com\weplayWeb\spring\Square\CreateCustomer.class
 com\weplayWeb\spring\polulationData\StateCodeConverter.class
 com\weplayWeb\spring\Square\SquareConfig.class
@@ -21,8 +22,11 @@ com\weplayWeb\spring\Square\EmailResult.class
 com\weplayWeb\spring\Square\TokenWrapper.class
 com\weplayWeb\spring\resource\GlobalExceptionHandler.class
 com\weplayWeb\spring\config\RedirectToHttpsConfig.class
+com\weplayWeb\spring\config\CloudinaryConfig.class
 com\weplayWeb\spring\polulationData\package-info.class
+com\weplayWeb\spring\Square\SubscriptionResponse.class
 com\weplayWeb\spring\resource\Controller.class
+com\weplayWeb\spring\services\ImageService.class
 com\weplayWeb\spring\Square\ErrorResponse.class
 com\weplayWeb\spring\config\WebSecurityConfig.class
 com\weplayWeb\spring\security\package-info.class

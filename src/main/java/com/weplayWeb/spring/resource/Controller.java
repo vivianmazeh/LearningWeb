@@ -25,10 +25,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import com.squareup.square.exceptions.ApiException;
 import com.weplayWeb.spring.Square.CreateCustomer;
 import com.weplayWeb.spring.Square.CreatePayment;
+import com.weplayWeb.spring.Square.CreateSubscription;
 import com.weplayWeb.spring.Square.CustomerResponse;
 import com.weplayWeb.spring.Square.EmailResult;
 import com.weplayWeb.spring.Square.ErrorResponse;
 import com.weplayWeb.spring.Square.PaymentResult;
+import com.weplayWeb.spring.Square.SubscriptionRequest;
+import com.weplayWeb.spring.Square.SubscriptionResponse;
 import com.weplayWeb.spring.Square.TokenWrapper;
 import com.weplayWeb.spring.model.CityProfile;
 import com.weplayWeb.spring.polulationData.GetCityProfiles;
@@ -49,6 +52,9 @@ public class Controller {
 	
 	@Autowired
 	private CreatePayment createPayment;
+	
+	 @Autowired
+	 private CreateSubscription subscriptionService;
 	
 	@Autowired
 	private EmailService emailService;
@@ -131,6 +137,109 @@ public class Controller {
 	    	     
 	    		 return paymentResult;	      		
 	     }
+	    
+//	    @PostMapping("/subscriptions")
+//	    public ResponseEntity<SubscriptionResponse> createSubscription(@RequestBody SubscriptionRequest request) {
+//	        try {
+//	            logger.info("Received subscription creation request for customer: {}", request.getCustomerId());
+//	            
+//	            // Create subscription
+//	            ResponseEntity<?> subscriptionResult = subscriptionService.createSubscription(request);
+//	            
+//	            if (subscriptionResult.getStatusCode().is2xxSuccessful()) {
+//	                String nonce = cspService.generateNonce();
+//	                
+//	                SubscriptionResponse response = new SubscriptionResponse(
+//	                    "SUCCESS",
+//	                    subscriptionResult.getBody(),
+//	                    nonce
+//	                );
+//	                
+//	                logger.info("Subscription created successfully for customer: {}", request.getCustomerId());
+//	                return ResponseEntity.ok()
+//	                    .header("Content-Security-Policy", cspService.generateCSPHeader(nonce))
+//	                    .body(response);
+//	            } else {
+//	                logger.error("Failed to create subscription: {}", subscriptionResult.getBody());
+//	                return ResponseEntity.badRequest().body(
+//	                    new SubscriptionResponse("FAILURE", "Failed to create subscription", null)
+//	                );
+//	            }
+//	        } catch (Exception e) {
+//	            logger.error("Error creating subscription", e);
+//	            return ResponseEntity.internalServerError().body(
+//	                new SubscriptionResponse("FAILURE", "Internal server error: " + e.getMessage(), null)
+//	            );
+//	        }
+//	    }
+//	    
+//	    @PostMapping("/{subscriptionId}/cancel")
+//	    public ResponseEntity<SubscriptionResponse> cancelSubscription(@PathVariable String subscriptionId) {
+//	        try {
+//	            logger.info("Received subscription cancellation request for ID: {}", subscriptionId);
+//	            
+//	            ResponseEntity<?> cancellationResult = subscriptionService.cancelSubscription(subscriptionId);
+//	            
+//	            if (cancellationResult.getStatusCode().is2xxSuccessful()) {
+//	                String nonce = cspService.generateNonce();
+//	                
+//	                SubscriptionResponse response = new SubscriptionResponse(
+//	                    "SUCCESS",
+//	                    "Subscription cancelled successfully",
+//	                    nonce
+//	                );
+//	                
+//	                logger.info("Subscription cancelled successfully: {}", subscriptionId);
+//	                return ResponseEntity.ok()
+//	                    .header("Content-Security-Policy", cspService.generateCSPHeader(nonce))
+//	                    .body(response);
+//	            } else {
+//	                logger.error("Failed to cancel subscription: {}", cancellationResult.getBody());
+//	                return ResponseEntity.badRequest().body(
+//	                    new SubscriptionResponse("FAILURE", "Failed to cancel subscription", null)
+//	                );
+//	            }
+//	        } catch (Exception e) {
+//	            logger.error("Error cancelling subscription", e);
+//	            return ResponseEntity.internalServerError().body(
+//	                new SubscriptionResponse("FAILURE", "Internal server error: " + e.getMessage(), null)
+//	            );
+//	        }
+//	    }
+//
+//	    @GetMapping("/{subscriptionId}")
+//	    public ResponseEntity<SubscriptionResponse> getSubscription(@PathVariable String subscriptionId) {
+//	        try {
+//	            logger.info("Received subscription retrieval request for ID: {}", subscriptionId);
+//	            
+//	            ResponseEntity<?> subscriptionResult = subscriptionService.getSubscription(subscriptionId);
+//	            
+//	            if (subscriptionResult.getStatusCode().is2xxSuccessful()) {
+//	                String nonce = cspService.generateNonce();
+//	                
+//	                SubscriptionResponse response = new SubscriptionResponse(
+//	                    "SUCCESS",
+//	                    subscriptionResult.getBody(),
+//	                    nonce
+//	                );
+//	                
+//	                return ResponseEntity.ok()
+//	                    .header("Content-Security-Policy", cspService.generateCSPHeader(nonce))
+//	                    .body(response);
+//	            } else {
+//	                logger.error("Failed to retrieve subscription: {}", subscriptionResult.getBody());
+//	                return ResponseEntity.badRequest().body(
+//	                    new SubscriptionResponse("FAILURE", "Failed to retrieve subscription", null)
+//	                );
+//	            }
+//	        } catch (Exception e) {
+//	            logger.error("Error retrieving subscription", e);
+//	            return ResponseEntity.internalServerError().body(
+//	                new SubscriptionResponse("FAILURE", "Internal server error: " + e.getMessage(), null)
+//	            );
+//	        }
+//	    }
+
 	      	    
 }
 
