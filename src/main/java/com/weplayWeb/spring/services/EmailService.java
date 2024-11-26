@@ -122,14 +122,14 @@ public class EmailService {
         
         double totalAmount = 0;
         for (TokenWrapper.Order order : tokenObject.getOrderInfo()) {
-            double itemTotal = order.price() * order.quantity();
+            double itemTotal = order.price() * order.quantityOfOrder();
             totalAmount += itemTotal;
             
             html.append("<tr>");
             html.append("<td style='padding: 10px; border: 1px solid #ddd;'>")
                 .append(order.sectionName()).append("</td>");
             html.append("<td style='padding: 10px; border: 1px solid #ddd; text-align: right;'>")
-                .append(order.quantity()).append("</td>");
+                .append(order.quantityOfOrder()).append("</td>");
             html.append("<td style='padding: 10px; border: 1px solid #ddd; text-align: right;'>$")
                 .append(String.format("%.2f", order.price())).append("</td>");
             html.append("<td style='padding: 10px; border: 1px solid #ddd; text-align: right;'>$")

@@ -42,7 +42,7 @@ public class CreatePayment {
 	private PaymentsApi paymentsApi; 
 
 	@Autowired
-    private CreateTicketOrder createOrder;
+    private CreateOrder createOrder;
 
 	private Money money;
 	

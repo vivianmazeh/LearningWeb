@@ -14,10 +14,11 @@ public class TokenWrapper {
     private String customerId;
     private Customer customer;
     private String buyerEmailAddress;
+
     
-    public record Order(double price, int quantity, String sectionName) {}
+    public record Order(double price, int quantityOfOrder, String sectionName, boolean isMembership, int numberOfChildrenAllowed  ) {}
     
-    List<Order >orderInfo = new ArrayList<Order>();
+    List<Order>orderInfo = new ArrayList<Order>();
 
     public List<Order> getOrderInfo() {
 		return orderInfo;
