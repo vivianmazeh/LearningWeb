@@ -52,6 +52,7 @@ public class SecurityConfig {
 	            .requiresSecure())
 	        .authorizeHttpRequests(auth -> auth
 	            .requestMatchers(mvcMatcherBuilder.pattern("/api/**")).permitAll()
+	            .requestMatchers("/api/cancel-subscription/**").permitAll()
 	            .requestMatchers(mvcMatcherBuilder.pattern("/")).permitAll()
 	            .requestMatchers(mvcMatcherBuilder.pattern("/card-payment/**")).permitAll()
 	            .requestMatchers(mvcMatcherBuilder.pattern("/error")).permitAll()

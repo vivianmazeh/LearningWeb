@@ -6,6 +6,8 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
+import javax.naming.spi.DirStateFactory.Result;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +21,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.ModelAndView;
 
+import com.squareup.square.SquareClient;
 import com.squareup.square.exceptions.ApiException;
+import com.squareup.square.models.CancelSubscriptionResponse;
+import com.squareup.square.models.Customer;
+import com.squareup.square.models.RetrieveCustomerResponse;
+import com.squareup.square.models.RetrieveSubscriptionResponse;
+import com.squareup.square.models.Subscription;
 import com.weplayWeb.spring.Square.CreateCustomer;
 import com.weplayWeb.spring.Square.CreatePayment;
 import com.weplayWeb.spring.Square.CreateSubscription;
@@ -37,12 +47,16 @@ import com.weplayWeb.spring.polulationData.GetCityProfiles;
 import com.weplayWeb.spring.services.CSPService;
 import com.weplayWeb.spring.services.EmailService;
 
+
 @RestController
 @RequestMapping("/api")
 public class Controller {
 
 	// @Autowired: used for automatic dependency injection
 
+	@Autowired
+    private SquareClient squareClient;
+	
 	@Autowired
     private CSPService cspService;
 	
@@ -55,8 +69,9 @@ public class Controller {
 	 @Autowired
 	 private CreateSubscription subscriptionService;
 	
-	@Autowired
-	private EmailService emailService;
+     
+    @Autowired
+    private EmailService emailService;
 	
 	private final Logger logger = LoggerFactory.getLogger(Controller.class);
 	
@@ -75,6 +90,8 @@ public class Controller {
 	
 	@Value("${cors.allowed.origin}")
 	private String corsAllowedOrigin;
+	
+
 	
 	  public Controller() {}
 	  
@@ -100,6 +117,7 @@ public class Controller {
 		  	 
 			  logger.info("Received customer creation request");	  
 			  ResponseEntity<CustomerResponse> response = createCustomer.createCustomerResponse(tokenObject);
+			  createCustomer.setCustomerInfo(tokenObject);
 			  logger.info("Customer creation completed with status: {}", response.getStatusCode());
 	          return response;		  
 	    } 
@@ -172,38 +190,48 @@ public class Controller {
 	        }
 	    }
 	    
-	    @PostMapping("/{subscriptionId}/cancel")
-	    public ResponseEntity<SubscriptionResponse> cancelSubscription(@PathVariable String subscriptionId) {
+	    @GetMapping("/cancel-subscription/{subscriptionId}")
+	    public ModelAndView showCancellationPage(@PathVariable String subscriptionId) {
+	        ModelAndView mav = new ModelAndView("cancel-subscription");
+	        mav.addObject("subscriptionId", subscriptionId);
+	        return mav;
+	    }
+	    
+	    @PostMapping("/cancel-subscription/{subscriptionId}/confirm")
+	    public ResponseEntity<SubscriptionResponse> confirmCancellation(
+	            @PathVariable String subscriptionId ) {
+	            
 	        try {
-	            logger.info("Received subscription cancellation request for ID: {}", subscriptionId);
+	        	RetrieveSubscriptionResponse subscriptionResult = 
+	        			 squareClient.getSubscriptionsApi().retrieveSubscription(subscriptionId, null);
 	            
-	            ResponseEntity<?> cancellationResult = subscriptionService.cancelSubscription(subscriptionId);
-	            
-	            if (cancellationResult.getStatusCode().is2xxSuccessful()) {
-	                String nonce = cspService.generateNonce();
-	                
-	                SubscriptionResponse response = new SubscriptionResponse(
-	                    "SUCCESS",
-	                    "Subscription cancelled successfully",
-	                    nonce
-	                );
-	                
-	                logger.info("Subscription cancelled successfully: {}", subscriptionId);
-	                return ResponseEntity.ok()
-	                    .header("Content-Security-Policy", cspService.generateCSPHeader(nonce))
-	                    .body(response);
-	            } else {
-	                logger.error("Failed to cancel subscription: {}", cancellationResult.getBody());
-	                return ResponseEntity.badRequest().body(
-	                    new SubscriptionResponse("FAILURE", "Failed to cancel subscription", null)
-	                );
-	            }
+	        	Subscription subscription = subscriptionResult.getSubscription();
+	        	
+	        	String customeId = subscription.getCustomerId();
+	        	
+	        	RetrieveCustomerResponse retrieveCustomerResponse = squareClient.getCustomersApi().retrieveCustomer(customeId);
+	            Customer customer = retrieveCustomerResponse.getCustomer();
+	            String email = customer.getEmailAddress();
+	            String givenName = customer.getGivenName();
+	            String familyName = customer.getFamilyName();
+	      
+	            String chargeThrDate = subscription.getChargedThroughDate();
+	      
+	            CancelSubscriptionResponse cancellationResult = squareClient.getSubscriptionsApi().cancelSubscription(subscriptionId);
+
+	                // Send cancellation confirmation email
+	                emailService.sendSubscriptionCancelEmail(email,
+	                										 givenName,
+	                										 familyName, 
+	                										 chargeThrDate, 	                					
+	                										 subscriptionId);     
+	                	
 	        } catch (Exception e) {
-	            logger.error("Error cancelling subscription", e);
-	            return ResponseEntity.internalServerError().body(
-	                new SubscriptionResponse("FAILURE", "Internal server error: " + e.getMessage(), null)
-	            );
+	            return ResponseEntity.internalServerError()
+	                .body(new SubscriptionResponse("FAILURE", "Internal server error", null));
 	        }
+	        return ResponseEntity.ok()
+	                .body(new SubscriptionResponse("SUCCESS", "Subscription is cancelled", null));
 	    }
 
 	    @GetMapping("/{subscriptionId}")

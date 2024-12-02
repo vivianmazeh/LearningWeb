@@ -32,6 +32,7 @@ import java.util.UUID;
 public class CreateSubscription {
 	
 	final Logger logger = LoggerFactory.getLogger(CreateSubscription.class);
+	
 	@Autowired
     private SquareClient squareClient;
     
@@ -47,11 +48,14 @@ public class CreateSubscription {
 	@Autowired
     private CreateCatalog createCatalog;
     
+	@Autowired
+    private CreateCard createCard;
 	
     private SubscriptionsApi subscriptionsApi;  
 
 
     private String orderId;
+    private String card_id;
     String planVariationId;
     
     
@@ -77,14 +81,13 @@ public class CreateSubscription {
 		  try {
 			  
 			  orderId = createOrder.createSubscriptionOrder(tokenObject);
-	   		
+	   		  card_id = createCard.createCard(tokenObject.getCustomerId(), tokenObject.getSourceId());
 			  planVariationId = createCatalog.createSubscriptionPlan(tokenObject);
 			  logger.info("Created plan variation with ID: {}", planVariationId);
             // Create subscription phases
 			  Phase phase = new Phase.Builder()
             			.ordinal(0L)       		    
             			.orderTemplateId(orderId)
-            			
 		                .build();
             
 			  LinkedList<Phase> phases = new LinkedList<>();
@@ -96,7 +99,8 @@ public class CreateSubscription {
                 .idempotencyKey(UUID.randomUUID().toString()) 
                 .planVariationId(planVariationId)
                 .timezone("America/New_York")
-                .phases( phases)                             
+                .phases( phases)  
+                .cardId(card_id)
                 .build();
 
             subscriptionsApi.createSubscriptionAsync(subscriptionRequest);
@@ -111,16 +115,7 @@ public class CreateSubscription {
        }
     }
 
-    public ResponseEntity<?> cancelSubscription(String subscriptionId) {
-        try {
-            CancelBookingRequest request = new CancelBookingRequest.Builder()
-                .build();
-            
-            return ResponseEntity.ok(subscriptionsApi.cancelSubscription(subscriptionId));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Failed to cancel subscription: " + e.getMessage());
-        }
-    }
+
 
     public ResponseEntity<?> getSubscription(String subscriptionId) {
         try {

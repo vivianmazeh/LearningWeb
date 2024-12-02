@@ -1,1 +1,5 @@
 /.metadata/
+
+# Sensitive Information
+.env
+*.env

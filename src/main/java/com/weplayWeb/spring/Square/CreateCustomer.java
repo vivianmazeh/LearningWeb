@@ -34,6 +34,8 @@ public class CreateCustomer {
 	
 	 @Autowired
 	 private CSPService cspService;
+	 
+	 Customer customer;
 	
 	private static final Logger logger = LoggerFactory.getLogger(CreateCustomer.class);
 	
@@ -67,6 +69,14 @@ public class CreateCustomer {
 	        } catch (Exception e) {
 	            return handleGeneralException(e);
 	        }
+	    }
+	  
+	  public void setCustomerInfo(TokenWrapper tokenObject) {
+		  this.customer = tokenObject.getCustomer();
+	  }
+	  
+	  public Customer getCustomerInfo() {
+	        return this.customer;
 	    }
 	
 	  private boolean isValidRequest(TokenWrapper tokenObject) {
