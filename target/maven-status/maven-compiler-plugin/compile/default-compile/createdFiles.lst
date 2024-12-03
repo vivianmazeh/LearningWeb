@@ -1,11 +1,13 @@
 com\weplayWeb\spring\Square\PaymentResult.class
 com\weplayWeb\spring\security\SecurityConfig$1.class
+com\weplayWeb\spring\Square\CreateCard.class
 com\weplayWeb\spring\Square\CreatePayment.class
 com\weplayWeb\spring\config\AppConfig.class
 com\weplayWeb\spring\Square\CustomerResponse.class
 com\weplayWeb\spring\polulationData\GetCityProfiles.class
 com\weplayWeb\spring\config\CorsConfig.class
 com\weplayWeb\spring\services\EmailService.class
+com\weplayWeb\spring\resource\WebhookController.class
 com\weplayWeb\spring\Square\CreateCustomer.class
 com\weplayWeb\spring\polulationData\StateCodeConverter.class
 com\weplayWeb\spring\Square\SquareConfig.class
